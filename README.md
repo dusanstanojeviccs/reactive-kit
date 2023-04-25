@@ -1,6 +1,12 @@
 # reactive-kit
 
-This is a mono repo for the state management library. The goal for this project is to provide observability and reactivity to React based applications. By providing fast and intuitive state management the developer experience should be greatly improved when working with data heavy react applications. By using easy rendering scope limitations the rerenders can be limited to only the components that need them without any additional effort on the developers side. Final result is an application model that is easy to use, easy to reason about and more performant than the crude full page rerender.
+The goal for this project is to provide observability and reactivity to React based applications. 
+
+By providing fast and intuitive state management the developer experience should be greatly improved when working with data heavy react applications. 
+
+By using easy rendering scope limitations the rerenders can be limited to only the components that need them without any additional effort on the developers side. 
+
+Final result - an application model that is easy to use, easy to reason about and more performant than the crude full page rerender.
 
 # Docs
 

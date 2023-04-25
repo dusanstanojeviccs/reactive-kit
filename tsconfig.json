@@ -5,9 +5,9 @@
     "node_modules"
   ],
   "compilerOptions": {
+    "target": "ES2015",
     "module": "esnext",
     "lib": ["dom", "esnext"],
-    "importHelpers": true,
     "declaration": true,
     "sourceMap": true,
     "rootDir": "./src",
