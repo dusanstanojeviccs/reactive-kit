@@ -5,8 +5,6 @@ export type ComputationContext = {
   getRef: () => number
 }
 
-export const LOG_EVERYTHING = false
-
 const computationsRunning: ComputationContext[] = []
 const registerComputationStart = (context: ComputationContext) => {
   // we are not doing anything here because when we run the notify method if the observation ref is not the
@@ -60,16 +58,13 @@ const getObservation = (computationCache: ComputationContext): Observation => {
 }
 
 export const observe = (observedObject: object, field: any) => {
-  LOG_EVERYTHING && console.log('ADDING THE OBSERVER ', computationsRunning.length)
   if (computationsRunning.length) {
     const lastComputationContext: ComputationContext = computationsRunning[computationsRunning.length - 1]
-    LOG_EVERYTHING && console.log('WE DO HAVE A CONTEXT')
     registerObserver(observedObject, field, lastComputationContext)
   }
 }
 
 const registerObserver = (observedObject: object, field: any, computationContext: ComputationContext) => {
-  LOG_EVERYTHING && console.log('REGISTERING OBSERVER ON ', field)
   let observations: ObservationMap
 
   if (observers.has(observedObject)) {
@@ -81,23 +76,15 @@ const registerObserver = (observedObject: object, field: any, computationContext
 
   let computationContexts: Observation[]
   const observation: Observation = getObservation(computationContext)
-  LOG_EVERYTHING && console.log('observation', observation)
 
   if (observations.has(field)) {
-    LOG_EVERYTHING && console.log('WE ARE HERE WE HAVE THE FIELD')
     computationContexts = observations.get(field)!
     if (!computationContexts.includes(observation)) {
       computationContexts.push(observation)
     }
   } else {
     computationContexts = [observation]
-    LOG_EVERYTHING && console.log('SETTING THE FIELD, ', JSON.stringify(computationContexts))
-    LOG_EVERYTHING && console.log('field', field)
     observations.set(field, computationContexts)
-
-    LOG_EVERYTHING && console.log('observations, ', JSON.stringify(observations))
-    LOG_EVERYTHING && console.log(JSON.stringify(observations.get(field)))
-    LOG_EVERYTHING && console.log('observers, ', JSON.stringify(observers))
   }
 }
 
@@ -108,16 +95,11 @@ export const notifyAll = (observedObject: object, field: any) => {
 
   // we need to notify all computation context observers that are still active
   // we also need to remove all non active observers that have been registered
-  LOG_EVERYTHING && console.log('notifyAll: ' + field.toString())
   if (observers.has(observedObject)) {
-    LOG_EVERYTHING && console.log('we have observers')
     const observationMap: ObservationMap = observers.get(observedObject)!
-
-    LOG_EVERYTHING && console.log('we have observationMap', observationMap)
 
     if (observationMap.has(field)) {
       const observations: Observation[] = observationMap.get(field)!
-      LOG_EVERYTHING && console.log('observations ' + observations.length)
 
       for (let i = 0; i < observations.length; i++) {
         const observation: Observation = observations[i]
@@ -128,7 +110,6 @@ export const notifyAll = (observedObject: object, field: any) => {
           !notifyCycle.has(computationContext) &&
           computationContext.getRef() == observation.ref
         ) {
-          LOG_EVERYTHING && console.log('WERE INVALIDATING')
           notifyCycle.add(computationContext)
           computationContext.onInvalidate()
         }
@@ -184,7 +165,6 @@ export class Computation<T> implements ComputationContext {
   }
 
   onInvalidate() {
-    LOG_EVERYTHING && console.log('INVALIDATING A COMPUTATION')
     if (this.#ref === this.#lastCalcedRef) {
       this.#ref++
       // we need to notify all observers
