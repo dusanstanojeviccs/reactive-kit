@@ -1,6 +1,6 @@
 {
   "name": "reactive-kit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Simple lib for reactive state management in react.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
